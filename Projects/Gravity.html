@@ -1,0 +1,114 @@
+<center>
+	<canvas id="CVS" width="800" height="540" style="border:1px solid #000000;">
+        <script>
+			var mouseUp = 0;
+			var G = 0.008844; // In pixels (Sun radii) cubed per earth masses per 1/60 seconds squared
+            //ctx.fillText("TEST",500,500);
+            var cvs=document.getElementById("CVS");
+            var ctx=cvs.getContext("2d");
+            ctx.font="10px Arial";
+            
+            var prs;
+            
+            var body = [];
+			
+			function square(x){
+				return x*x;	
+			}
+            
+            function getDist(x1, y1, x2 ,y2){
+				var dist = Math.sqrt(square(x1-x2)+square(y1-y2));
+				return dist;
+			}
+            
+            function getMousePos(canvas, event) {
+				var rect = canvas.getBoundingClientRect();
+				return {
+					x: event.clientX - rect.left,
+					y: event.clientY - rect.top
+				};
+			}
+            
+            cvs.addEventListener('click', function(event) {
+				var mousePos = getMousePos(cvs, event);
+                if(event.button == 0){
+                    body[body.length] = new circle(mousePos.x, mousePos.y,
+					                               document.getElementById("size").value,
+												   document.getElementById("mass").value,
+												   document.getElementById("speed").value,
+												   document.getElementById("angle").value);
+                }
+            });
+
+			cvs.onmouseup=function(){
+				mouseUp=1;
+			}
+
+            function circle (x,y,r,m,v,A){
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.mG = m*G;
+                this.xVel = v*Math.cos(A*(Math.PI/180));
+                this.yVel = v*Math.sin(A*(Math.PI/180));
+                
+                this.draw = function(){
+                    ctx.fillText(Math.floor(this.x)+"\n"+Math.floor(this.y),this.x+this.r+1,this.y);
+                    ctx.beginPath();
+                    ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                
+                this.move = function(){
+                    this.draw();
+                    if (this != prs){
+                        this.x += this.xVel;
+                        this.y += this.yVel;
+                    }
+                }
+                this.update = function(){
+                    if(this.x>10000||this.y>10000){
+						this.mG=0;
+					}
+					else{
+						this.move();
+						for (var ii=0; ii<body.length; ii++){
+							if (this != body[ii]){
+								var R = getDist(body[ii].x,body[ii].y,this.x,this.y);
+								this.xVel += body[ii].mG*(body[ii].x-this.x)/(R*R*R);
+								this.yVel += body[ii].mG*(body[ii].y-this.y)/(R*R*R);
+							}
+						}
+                    }
+                }
+            }
+            
+            //body[0] = new circle(400,270,10,333060,0,0);
+            
+            var time = 0;
+            function loop (){
+                ctx.clearRect(0,0,cvs.width,cvs.height);
+                if(body.length+1){
+                    for (var i=0; i<body.length; i++){
+                        body[i].update();
+                    }
+                }
+                
+                time += 1/60;
+                ctx.fillText(Math.floor(time*10)/10,500,400);
+                
+                if(1){
+                    setTimeout(function() {
+						loop()
+					}, 1000/60);
+                }
+            }
+            loop()
+        </script class='  wsite-theme-light'>
+    </canvas><br>
+	Size: <input type="text" id="size" value=10><br> <p>(In pixels. 1 pixel = 1 sun-radius)</p>
+	Mass: <input type="text" id="mass" value=0><br> <p>(In earth-masses)</p>
+	Speed: <input type="text" id="speed" value=0><br> <p>(In pixels per 1/60 seconds. 1/60 seconds = 24 hours)</p>
+	Angle: <input type="text" id="angle" value=0><br> <p>(In degrees. Clockwise from the x axis)</p>
+</center>

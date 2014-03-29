@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+	<head>
+		<style>
+			canvas{
+				border:1px solid #000000;
+			}
+		</style>
+		<meta charset="utf-8"></meta>
+	</head>
+	<body>
+		<table width="500">
+			<tbody>
+				<tr>
+					<td>
+						<canvas id="CVS" width="800" height="540"></canvas>
+						<script src=Lsys.js></script>
+					</td>
+					<td>
+						<label>Seed:</label><br>       <input id="seed" value="A" type="text"><br><br>
+						<label>Rules:</label><br>      <input id="Rules" value="A->B[+A][-A],B->BB" type="text"><br><br>
+						<label>Iterations:</label><br> <input id="n" value=4 type="text"><br><br>
+						<label>Turn CW:</label><br>	   <input id="turnCW" value="+" type="text"><br><br>
+						<label>Turn CC:</label><br>	   <input id="turnCC" value="-" type="text"><br><br>
+						<label>Turn Angle:</label><br> <input id="turnAngle" value=45 type="text"><br><br>
+						<label>Push:</label><br>       <input id="Push" value="[" type="text"><br><br>
+						<label>Pop:</label><br>	       <input id="Pop" value="]" type="text"><br><br>
+						<input type="checkbox" id="anim">Animated (Does nothing yet)</input><br>
+						<button id="button" type="button" onclick="listener()">Generate</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<textarea readonly="" name="log" id="log" style="width: 100%;" rows="10"></textarea>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			Instructions:<br>
+			blab
+		</p>
+	</body>
+</html>
