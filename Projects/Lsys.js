@@ -45,6 +45,10 @@ function getVals(){
 	length = getById("length")*cvs.height;
 }
 
+function topng(){
+	window.location = cvs.toDataURL("image/png");
+}
+
 function listener(){
 	out("",1);
 	
