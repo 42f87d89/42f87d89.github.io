@@ -1,7 +1,7 @@
 var cvs=document.getElementById("CVS");
 var ctx=cvs.getContext("2d");
 
-var vars = {
+/*var vars = {
 	pStack: [],
 	aStack: [],
 	sys: "",
@@ -13,7 +13,7 @@ var vars = {
 	O: [cvs.width/2,cvs.height],
 	pos: O,
 	angle: 90
-};
+};*/
 
 var pStack = [];
 var aStack = [];
@@ -27,9 +27,9 @@ var O = [cvs.width/2,cvs.height];
 var pos = O;
 var angle = 90;
 
-function loop(func, delay=0){
+/*function loop(func, delay=0){
 	if(delay);
-}
+}*/
 
 function getById(id){
 	return document.getElementById(id).value;
