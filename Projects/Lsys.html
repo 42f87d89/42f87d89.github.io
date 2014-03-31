@@ -40,7 +40,46 @@
 		</table>
 		<p>
 			Instructions:<br>
-			blab
+			L-systems, short for Lindenmeyer system, is a mathy thing that can be used to make fractals and stuff.<br>
+			Seed: This is the starting value, it can be any character.<br>
+			Rules: With the form "case1"->"result1","case2"->"result2",etc. The case is limited to being one character, where the result can be anything.<br>
+			What it does is, it looks at every character in the seed (or system), and replaces it with the result.<br>
+			Iterations: This is how many times the seed will be put through the rules.<br>
+			Length: The length of the individual lines, it is a fraction of the height of the rectangle where things are drawn, anything that is not in the categories below will be treated as the instruction "draw a line forward".<br>
+			Turn CW: Turn clockwise. It is treated as a command "turn clockwise by ANGLE", where angle is Turn Angle.<br>
+			Turn CC: Turn counter-clockwise. It is treated as a command "turn counterclockwise by ANGLE", where angle is Turn Angle.<br>
+			Turn Angle: The angle by which to turn.<br>
+			Push: This is simply treated as a command "remember this position".<br>
+			Pop: This is the antithesis of Push, it is treated as a command "go back to the most recent place you remember, then forget about it".<br><br>
+			
+			Some interesting setting to try out:<br>
+			(you will have to adjust the length and iterations by yourself)<br>
+			Sierpinski triangle:<br>
+			Seed=A<br>
+			Rules=A->B-A-B,B->A+B+A<br>
+			Angle=60<br>
+			leave other settings as the default<br><br>
+			
+			Koch Curve:<br>
+			Seed=A<br>
+			Rules=A->A-A++A-A<br>
+			Angle=60<br><br>
+			
+			Koch Snowflake<br>
+			Seed=+A--A--A<br>
+			Rules=A->A+A--A+A<br>
+			Angle=60<br><br>
+			
+			Weird Snowflake<br>
+			Seed=+A--A--A<br>
+			Rules=A->A-A++A-A<br>
+			Angle=60<br><br>
+			
+			Bushy Tree<br>
+			Seed=A<br>
+			Rules=A->BB++[+A][---A]A<br>
+			Angle=10<br><br>
+			
 		</p>
 	</body>
 </html>
