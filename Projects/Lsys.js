@@ -35,7 +35,7 @@ var length = 0;
 var rules = [];
 var turn = 0;
 
-var O = [cvs.width/2,cvs.height];
+var O = [400, 540];
 var pos = O;
 var angle = 90;
 
