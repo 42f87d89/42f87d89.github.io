@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	cvs = document.createElement("canvas");
 	cvs.id = "CVS";
-	cvs.style.width = "800px";
-	cvs.style.height = "540px";
+	cvs.width = "800px";
+	cvs.height = "540px";
 	
 	document.getElementById("inject").appendChild(cvs);
 	
