@@ -1,17 +1,18 @@
 var cvs;
 var ctx;
 
-initCanvas = function(){
+document.addEventListener('DOMContentLoaded', function(){
+
 	cvs = document.createElement("canvas");
 	cvs.id = "CVS";
-	cvs.style.width = "800";
-	cvs.style.height = "540";
+	cvs.style.width = "800px";
+	cvs.style.height = "540px";
 	
 	document.getElementById("inject").appendChild(cvs);
 	
 	ctx = cvs.getContext("2d");
 	
-}
+});
 
 /*var vars = {
 	pStack: [],
