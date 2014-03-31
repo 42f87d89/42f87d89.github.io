@@ -1,28 +1,63 @@
 var cvs=document.getElementById("CVS");
 var ctx=cvs.getContext("2d");
 
+var vars = {
+	pStack: [],
+	aStack: [],
+	sys: "",
+	animated: false,//not working
+	length: 0,
+	rules: [],
+	turn: 0,
+	
+	O: [cvs.width/2,cvs.height],
+	pos: O,
+	angle: 90
+};
+
 var pStack = [];
 var aStack = [];
 var sys = "";
 var animated = false;//not working
-var size = cvs.height/40;
+var length = 0;
+var rules = [];
+var turn = 0;
 
-var pos = [cvs.width/2,cvs.height];
+var O = [cvs.width/2,cvs.height];
+var pos = O;
 var angle = 90;
+
+function loop(func, delay=0){
+	if(delay);
+}
+
+function getById(id){
+	return document.getElementById(id).value;
+}
+
+function getVals(){
+	sys = getById("seed");
+	pos = O;
+	angle = 90;
+	turn = getById("turnAngle");
+	animated = document.getElementById("anim").checked;
+	rules = getById("Rules").split(",");
+	length = getById("length")*cvs.height;
+}
 
 function listener(){
 	out("",1);
-	sys = document.getElementById("seed").value;
-	pos = [cvs.width/2,cvs.height];
-	angle=90;
 	
-	evolve(document.getElementById("n").value, animated);
-	draw(animated);
+	getVals();
+	
+	evolve(getById("n"), animated);
+	draw();
 }
 
-function out(msg,clear=0){
+function out(msg,clear=false){
 	if(clear) document.getElementById("log").value = "";
 	else document.getElementById("log").value += "\n" + msg;
+	return msg;
 }
 
 function trLine(x, y, r, a){ //Turtle line: cursor x pos, cursor y pos, legth of line, angle counterclock from y=0
@@ -32,58 +67,52 @@ function trLine(x, y, r, a){ //Turtle line: cursor x pos, cursor y pos, legth of
 	ctx.stroke();
 }
 
-function draw(){
+function draw(system=""){
 	ctx.clearRect(0,0,cvs.width,cvs.height);
 	out("drawing " + sys);
 	for(i = 0; i<sys.length; i++){
 		c=sys[i];
-		if(c == document.getElementById("Push").value){
+		if(c == getById("Push")){
 			pStack.push(pos);
 			aStack.push(angle);
 		}
-		else if(c == document.getElementById("Pop").value){
+		else if(c == getById("Pop")){
 			pos=pStack.pop();
 			angle=aStack.pop();
 		}
-		else if(c == document.getElementById("turnCC").value){
-			angle -= document.getElementById("turnAngle").value;
+		else if(c == getById("turnCC")){
+			angle -= getById("turnAngle");
 		}
-		else if(c == document.getElementById("turnCW").value){
-			angle -= -document.getElementById("turnAngle").value; //value is string, so "+" concatenates instead of adding. This is a lazy fix, could use Number() but meh
+		else if(c == getById("turnCW")){
+			angle -= -getById("turnAngle"); //value is string, so "+" concatenates instead of adding. This is a lazy fix, could use Number() but meh
 		}
+		/*else if(c == getById("invisible")){
+			
+		}*/
 		else{
-			trLine(pos[0], pos[1], size, angle);
-			pos=[pos[0]+(size)*Math.cos(0.01745329*angle),
-			     pos[1]-(size)*Math.sin(0.01745329*angle)];
+			trLine(pos[0], pos[1], length, angle);
+			pos=[pos[0]+(length)*Math.cos(0.01745329*angle),
+			     pos[1]-(length)*Math.sin(0.01745329*angle)];
 		}
 	}
 }
 
 function evolve(itr=1, anim=false){
-	//add regex to rules
-	rules=document.getElementById("Rules").value.split(",");
-	var newSys = ""; //to avoid weirdness, put new values into newsys, THEN put newsys in sys in the end of the function	
-	for(i = 0; i<rules.length; i++){
-		newSys = "";
-		rule=rules[i].split("->");
-		for(j = 0; j<sys.length; j++){
-			//out("sys: " + sys);
-			//out(rule + " on " + j + ": " + sys[j]);
-			if(rule[0]==sys[j]){
-				newSys += rule[1];
+	if(itr<1) return;
+	var newSys = "";
+	for(s = 0; s<sys.length; s++){
+		var replaced = false;
+		for(r = 0; r<rules.length; r++){
+			if(sys[s] == rules[r].split("->")[0]){
+				newSys += rules[r].split("->")[1];
+				replaced = true;
+				break;
 			}
-			else{
-				newSys += sys[j];
-			}
-			//out("newSys: " + newSys)
 		}
-		sys=newSys;
+		if(replaced == false){
+			newSys += sys[s];
+		}
 	}
-	//out(sys + " became " + newSys + "\n");
-	if(anim && itr>1){
-		
-		draw();
-		setTimeout(evolve(itr-1, true), 1000);
-	}
-	else if(itr>1) evolve(itr-1, anim);
+	sys=newSys;
+	evolve(itr-1, anim);
 }
