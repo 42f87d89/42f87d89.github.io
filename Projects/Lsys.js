@@ -1,5 +1,17 @@
-var cvs=document.getElementById("CVS");
-var ctx=cvs.getContext("2d");
+var cvs;
+var ctx;
+
+initCanvas = function(){
+	cvs = document.createElement("canvas");
+	cvs.id = "CVS";
+	cvs.style.width = "800";
+	cvs.style.height = "540";
+	
+	document.getElementById("inject").appendChild(cvs);
+	
+	ctx = cvs.getContext("2d");
+	
+}
 
 /*var vars = {
 	pStack: [],
@@ -58,7 +70,10 @@ function listener(){
 	draw();
 }
 
-function out(msg,clear=false){
+function out(msg,clear){
+	
+	clear = clear ? true : false;
+	
 	if(clear) document.getElementById("log").value = "";
 	else document.getElementById("log").value += "\n" + msg;
 	return msg;
@@ -71,7 +86,10 @@ function trLine(x, y, r, a){ //Turtle line: cursor x pos, cursor y pos, legth of
 	ctx.stroke();
 }
 
-function draw(system=""){
+function draw(system){
+	
+	system = system ? system : "";
+	
 	ctx.clearRect(0,0,cvs.width,cvs.height);
 	out("drawing " + sys);
 	for(i = 0; i<sys.length; i++){
@@ -101,7 +119,7 @@ function draw(system=""){
 	}
 }
 
-function evolve(itr=1, anim=false){
+function evolve(itr, anim){
 	if(itr<1) return;
 	var newSys = "";
 	for(s = 0; s<sys.length; s++){
