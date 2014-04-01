@@ -1,5 +1,18 @@
-var cvs=document.getElementById("CVS");
-var ctx=cvs.getContext("2d");
+var cvs;
+var ctx;
+
+document.addEventListener('DOMContentLoaded', function(){
+
+	cvs = document.createElement("canvas");
+	cvs.id = "CVS";
+	cvs.width = "800";
+	cvs.height = "540";
+	
+	document.getElementById("inject").appendChild(cvs);
+	
+	ctx = cvs.getContext("2d");
+	
+});
 
 /*var vars = {
 	pStack: [],
@@ -23,7 +36,7 @@ var length = 0;
 var rules = [];
 var turn = 0;
 
-var O = [cvs.width/2,cvs.height];
+var O = [400, 540];
 var pos = O;
 var angle = 90;
 
@@ -58,7 +71,10 @@ function listener(){
 	draw();
 }
 
-function out(msg,clear=false){
+function out(msg,clear){
+	
+	clear = clear ? true : false;
+	
 	if(clear) document.getElementById("log").value = "";
 	else document.getElementById("log").value += "\n" + msg;
 	return msg;
@@ -71,7 +87,9 @@ function trLine(x, y, r, a){ //Turtle line: cursor x pos, cursor y pos, legth of
 	ctx.stroke();
 }
 
-function draw(system=""){
+function draw(system){
+	system = system ? system : "";
+	
 	ctx.clearRect(0,0,cvs.width,cvs.height);
 	out("drawing " + sys);
 	for(i = 0; i<sys.length; i++){
@@ -90,18 +108,22 @@ function draw(system=""){
 		else if(c == getById("turnCW")){
 			angle -= -getById("turnAngle"); //value is string, so "+" concatenates instead of adding. This is a lazy fix, could use Number() but meh
 		}
-		/*else if(c == getById("invisible")){
-			
-		}*/
 		else{
-			trLine(pos[0], pos[1], length, angle);
-			pos=[pos[0]+(length)*Math.cos(0.01745329*angle),
-			     pos[1]-(length)*Math.sin(0.01745329*angle)];
+			var draw=true;
+			var nodes = getById("nodes");
+			for(ns=0;ns<nodes.length;ns++){
+				if(c == nodes[ns]) draw=false;
+			}
+			if(draw){
+				trLine(pos[0], pos[1], length, angle);
+				pos=[pos[0]+(length)*Math.cos(0.01745329*angle),
+				     pos[1]-(length)*Math.sin(0.01745329*angle)];
+			}
 		}
 	}
 }
 
-function evolve(itr=1, anim=false){
+function evolve(itr, anim){
 	if(itr<1) return;
 	var newSys = "";
 	for(s = 0; s<sys.length; s++){
@@ -118,5 +140,6 @@ function evolve(itr=1, anim=false){
 		}
 	}
 	sys=newSys;
-	evolve(itr-1, anim);
+	if(anim) evolve(itr-1,true);
+	else evolve(itr-1, anim);
 }

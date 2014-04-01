@@ -6,21 +6,21 @@
 			}
 		</style>
 		<meta charset="utf-8"></meta>
+		<script src=Lsys.js></script>
 	</head>
 	<body>
 		<table width="500">
 			<tbody>
 				<tr>
-					<td>
-						<canvas id="CVS" width="800" height="540"></canvas>
-						<script src=Lsys.js></script>
+					<td id="inject">
+						
 					</td>
 					<td>
 						<label>Seed:</label><br>       <input id="seed" value="A" type="text"><br><br>
 						<label>Rules:</label><br>      <input id="Rules" value="A->B[+A][-A],B->BB" type="text"><br><br>
 						<label>Iterations:</label><br> <input id="n" value=4 type="text"><br><br>
 						<label>Length:</label><br>     <input id="length" value="0.05" type="text"><br><br>
-						<!--<label>Invisible:</label><br>  <input id="invisible" value="" type="text"><br><br>-->
+						<label>Nodes:</label><br>      <input id="nodes" value="" type="text"><br><br>
 						<label>Turn CW:</label><br>	   <input id="turnCW" value="+" type="text"><br><br>
 						<label>Turn CC:</label><br>	   <input id="turnCC" value="-" type="text"><br><br>
 						<label>Turn Angle:</label><br> <input id="turnAngle" value=45 type="text"><br><br>
@@ -46,6 +46,7 @@
 			What it does is, it looks at every character in the seed (or system), and replaces it with the result.<br>
 			Iterations: This is how many times the seed will be put through the rules.<br>
 			Length: The length of the individual lines, it is a fraction of the height of the rectangle where things are drawn, anything that is not in the categories below will be treated as the instruction "draw a line forward".<br>
+			Nodes: This is treated as a command "do absolutely nothing". Useful for controling the growth of the fractal.<br>
 			Turn CW: Turn clockwise. It is treated as a command "turn clockwise by ANGLE", where angle is Turn Angle.<br>
 			Turn CC: Turn counter-clockwise. It is treated as a command "turn counterclockwise by ANGLE", where angle is Turn Angle.<br>
 			Turn Angle: The angle by which to turn.<br>
@@ -59,6 +60,12 @@
 			Rules=A->B-A-B,B->A+B+A<br>
 			Angle=60<br>
 			leave other settings as the default<br><br>
+			
+			Dragon Curve:<br>
+			Seed=FX<br>
+			Rules=X->X+YF+,Y->-FX-Y<br>
+			Nodes=F<br>
+			Angle=90<br><br>
 			
 			Koch Curve:<br>
 			Seed=A<br>
