@@ -14,20 +14,6 @@ document.addEventListener('DOMContentLoaded', function(){
 	
 });
 
-/*var vars = {
-	pStack: [],
-	aStack: [],
-	sys: "",
-	animated: false,//not working
-	length: 0,
-	rules: [],
-	turn: 0,
-	
-	O: [cvs.width/2,cvs.height],
-	pos: O,
-	angle: 90
-};*/
-
 var pStack = [];
 var aStack = [];
 var sys = "";
