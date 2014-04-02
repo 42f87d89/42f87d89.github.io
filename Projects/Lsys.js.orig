@@ -1,4 +1,3 @@
-//TODO: add zoom and scrolling.
 var cvs;
 var ctx;
 
@@ -15,10 +14,24 @@ document.addEventListener('DOMContentLoaded', function(){
 	
 });
 
+/*var vars = {
+	pStack: [],
+	aStack: [],
+	sys: "",
+	animated: false,//not working
+	length: 0,
+	rules: [],
+	turn: 0,
+	
+	O: [cvs.width/2,cvs.height],
+	pos: O,
+	angle: 90
+};*/
+
 var pStack = [];
 var aStack = [];
 var sys = "";
-var animated = false;
+var animated = false;//not working
 var length = 0;
 var rules = [];
 var turn = 0;
@@ -26,6 +39,10 @@ var turn = 0;
 var O = [400, 540];
 var pos = O;
 var angle = 90;
+
+/*function loop(func, delay=0){
+	if(delay);
+}*/
 
 function getById(id){
 	return document.getElementById(id).value;
@@ -47,7 +64,6 @@ function topng(){
 
 function listener(){
 	out("",1);
-	//ctx.clearRect(0,0,cvs.width,cvs.height);
 	
 	getVals();
 	
@@ -56,6 +72,7 @@ function listener(){
 }
 
 function out(msg,clear){
+	
 	clear = clear ? true : false;
 	
 	if(clear) document.getElementById("log").value = "";
@@ -71,11 +88,14 @@ function trLine(x, y, r, a){ //Turtle line: cursor x pos, cursor y pos, legth of
 }
 
 function draw(system){
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 87aa28e6c2edfdec735c514f822098f90cf31f76
 	system = system ? system : "";
-	out("drawing " + sys);
 	
 	ctx.clearRect(0,0,cvs.width,cvs.height);
-	
+	out("drawing " + sys);
 	for(i = 0; i<sys.length; i++){
 		c=sys[i];
 		if(c == getById("Push")){
@@ -108,9 +128,7 @@ function draw(system){
 }
 
 function evolve(itr, anim){
-	if(itr<1){
-		return;
-	}
+	if(itr<1) return;
 	var newSys = "";
 	for(s = 0; s<sys.length; s++){
 		var replaced = false;
@@ -126,15 +144,6 @@ function evolve(itr, anim){
 		}
 	}
 	sys=newSys;
-	if(anim){
-		pos=O;
-		pStack=[];
-		aStack=[];
-		angle=90;
-		draw();
-
-		console.log(sys);
-		window.setTimeout(function(){evolve(itr-1,true)}, 1000);
-	}
+	if(anim) evolve(itr-1,true);
 	else evolve(itr-1, anim);
 }
