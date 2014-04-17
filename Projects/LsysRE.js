@@ -1,3 +1,4 @@
+var sys;
 function System(seed, rules, length, turn, O){
 	this.seed = seed;
 	this.system = seed;
@@ -131,4 +132,98 @@ function out(msg,clear){
 	if(clear) document.getElementById("log").value = "";
 	else document.getElementById("log").value += "\n" + msg;
 	return msg;
+}
+
+function presets(){
+	if(getById("preset") == "-");
+	else if(getById("preset") == "Tree"){
+		document.getElementById("seed").value = "A";
+		document.getElementById("Rules").value = "A->B[+A][-A],B->BB";
+		document.getElementById("n").value = 8;
+		document.getElementById("length").value = 0.003;
+		document.getElementById("nodes").value = "";
+		document.getElementById("turnCW").value = "+";
+		document.getElementById("turnCC").value = "-";
+		document.getElementById("turnAngle").value = "45";
+		document.getElementById("Push").value = "[";
+		document.getElementById("Pop").value = "]";
+	}
+
+	else if(getById("preset") == "SierpinskiTriangle"){
+		document.getElementById("seed").value = "A";
+		document.getElementById("Rules").value = "A->B-A-B,B->A+B+A";
+		document.getElementById("n").value = 8;
+		document.getElementById("length").value = 0.003;
+		document.getElementById("nodes").value = "";
+		document.getElementById("turnCW").value = "+";
+		document.getElementById("turnCC").value = "-";
+		document.getElementById("turnAngle").value = "60";
+		document.getElementById("Push").value = "[";
+		document.getElementById("Pop").value = "]";
+	}
+
+	else if(getById("preset") == "DragonCurve"){
+		document.getElementById("seed").value = "++FX";
+		document.getElementById("Rules").value = "X->X+YF+,Y->-FX-Y";
+		document.getElementById("n").value = 12;
+		document.getElementById("length").value = 0.01;
+		document.getElementById("nodes").value = "F";
+		document.getElementById("turnCW").value = "+";
+		document.getElementById("turnCC").value = "-";
+		document.getElementById("turnAngle").value = "90";
+		document.getElementById("Push").value = "[";
+		document.getElementById("Pop").value = "]";
+	}
+
+	else if(getById("preset") == "KochCurve"){
+		document.getElementById("seed").value = "A";
+		document.getElementById("Rules").value = "A->A-A++A-A";
+		document.getElementById("n").value = 5;
+		document.getElementById("length").value = 0.003;
+		document.getElementById("nodes").value = "";
+		document.getElementById("turnCW").value = "+";
+		document.getElementById("turnCC").value = "-";
+		document.getElementById("turnAngle").value = "60";
+		document.getElementById("Push").value = "[";
+		document.getElementById("Pop").value = "]";
+	}
+
+	else if(getById("preset") == "KochSnowflake"){
+		document.getElementById("seed").value = "+A--A--A";
+		document.getElementById("Rules").value = "A->A+A--A+A";
+		document.getElementById("n").value = 5;
+		document.getElementById("length").value = 0.003;
+		document.getElementById("nodes").value = "";
+		document.getElementById("turnCW").value = "+";
+		document.getElementById("turnCC").value = "-";
+		document.getElementById("turnAngle").value = "60";
+		document.getElementById("Push").value = "[";
+		document.getElementById("Pop").value = "]";
+	}
+
+	else if(getById("preset") == "WeirdSnowflake"){
+		document.getElementById("seed").value = "+A--A--A";
+		document.getElementById("Rules").value = "A->A-A++A-A";
+		document.getElementById("n").value = 5;
+		document.getElementById("length").value = 0.003;
+		document.getElementById("nodes").value = "";
+		document.getElementById("turnCW").value = "+";
+		document.getElementById("turnCC").value = "-";
+		document.getElementById("turnAngle").value = "60";
+		document.getElementById("Push").value = "[";
+		document.getElementById("Pop").value = "]";
+	}
+
+	else if(getById("preset") == "BushyTree"){
+		document.getElementById("seed").value = "A";
+		document.getElementById("Rules").value = "A->BB++[+A][---A]A";
+		document.getElementById("n").value = 5;
+		document.getElementById("length").value = 0.05;
+		document.getElementById("nodes").value = "";
+		document.getElementById("turnCW").value = "+";
+		document.getElementById("turnCC").value = "-";
+		document.getElementById("turnAngle").value = "10";
+		document.getElementById("Push").value = "[";
+		document.getElementById("Pop").value = "]";
+	}
 }
