@@ -115,11 +115,22 @@ function generate(){
 		+getById("turnAngle"),  //+ casts to num
 		[cvs.width/2,cvs.height]
 	);
-	for(i = getById("n"); i > 0; i--){
-		sys.system = sys.evolve();
+	if(!document.getElementById("anim").checked){
+		for(i = getById("n"); i > 0; i--){
+			sys.system = sys.evolve();
+		}
+		sys.points = sys.parse();
+		sys.draw();
+	}else{
+		(function a(n){
+			if(n<1) return;
+			ctx.clearRect(0,0,cvs.width,cvs.height);
+			sys.system = sys.evolve();
+			sys.points = sys.parse();
+			sys.draw();
+			window.setTimeout(function(){a(n-1)},1000)
+		})(getById("n"));
 	}
-	sys.points = sys.parse();
-	sys.draw();
 }
 
 function toPNG(){
