@@ -80,13 +80,13 @@ System.prototype.draw = function(){
 	}
 };
 
-System.prototype.move(pn){
+System.prototype.move = function(pn){
 	this.O = pn;
-}
+};
 
-System.prototype.zoom(ln){
+System.prototype.zoom = function(ln){
 	this.length = ln;
-}
+};
 
 var cvs; var ctx;
 document.addEventListener('DOMContentLoaded', function(){
