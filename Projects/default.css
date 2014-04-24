@@ -1,0 +1,23 @@
+html{
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	background: #ccc;
+}
+body{
+	width: 70%;
+	margin-top: 2%;
+	margin-bottom: 0px;
+	margin-right: 15%;
+	margin-left: 15%;
+	background: #fff;
+}
+.text{
+	background: #fff;
+	margin: 5%;
+}
+.navbar{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
