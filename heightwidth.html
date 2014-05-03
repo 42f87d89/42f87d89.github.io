@@ -3,9 +3,13 @@
 	</head>
 	<body>
 		<script>
+			function f(){
+				document.getElementById("height").value = screen.height;
+				document.getElementById("width").value = screen.width;
+				document.setTimeout(function(){f()},1000)
+			}
 			document.addEventListener('DOMContentLoaded', function(){
-				document.getElementById("height").value = ;
-				document.getElementById("width").value = ;
+				
 			});
 		</script>
 		<input id="height" type="text"></input>
