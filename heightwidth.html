@@ -6,7 +6,7 @@
 			function f(){
 				document.getElementById("height").value = screen.height;
 				document.getElementById("width").value = screen.width;
-				document.setTimeout(function(){f()},1000)
+				window.setTimeout(function(){f()},1000)
 			}
 			document.addEventListener('DOMContentLoaded', function(){
 				f();
