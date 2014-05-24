@@ -1,50 +1,64 @@
 function out(msg){
-	document.getElementById("out").value += msg + "\n"
+	document.getElementById("out").value += msg + "\n";
 }
 
 function get(){
-	return document.getElementById("in").value;
+	var raw = document.getElementById("in").value;
+	inp = raw.split("\n");
+	document.getElementById("in").value = raw.replace(inp[0]+"\n","")
+	return inp[0];
 }
 
-function parse(input){
-	input = input?input:document.getElementById("src").value
-	var sys = [];
+function parse(src){
+	document.getElementById("out").value = null;
+	src = src?src:document.getElementById("src").value;
+	var sys = [0];
 	var ndx = 0;
-	//todo: remember pos of last [ and ]
-	for(i = 0; i<input.length; i++){
-		if(input[i] == ">"){
-			if(sys[ndx] == undefined) sys[ndx] = 0;
-			ndx++;
+	/*//preprocessing. index parens
+	for(;0;){
+		if(0){
 		}
-		else if(input[i] == "<"){
+	}*/
+	for(i = 0; i<src.length; i++){
+		if(src[i] == ">"){
+			ndx++;
+			if(sys[ndx] == undefined) sys[ndx] = 0;
+		}
+		else if(src[i] == "<"){
 			if(ndx>0) ndx--;
 		}
-		else if(input[i] == "+"){
-			if(sys[ndx] == undefined) sys[ndx] = 1;
-			else sys[ndx]++;
+		else if(src[i] == "+"){
+			sys[ndx]++;
 		}
-		else if(input[i] == "-"){
-			if(sys[ndx] == undefined) sys[ndx] = -1;
-			else sys[ndx]--;
+		else if(src[i] == "-"){
+			sys[ndx]--;
 		}
-		else if(input[i] == "["){//!!!!!!!!!!!!!!!!!!IMPORTANT: nesting is broken
-			if(sys[ndx]) continue;
-			else for(jump = false; !jump; i++){
-				if(input[i] == "]") jump = true;
+		else if(src[i] == "["){
+			asdf = 0;
+			if(!sys[ndx]) for(jump = false; !jump; i++){
+				if(src[i] == "[") asdf++;
+				else if(src[i] == "]"){
+					asdf--;
+					if(asdf == 0) jump = true;
+				}
 			}
 			continue;
 		}
-		else if(input[i] == "]"){
-			if(!sys[ndx]) continue;
-			else for(jump = false; !jump; i--){
-				if(input[i] == "[") jump = true;
+		else if(src[i] == "]"){
+			asdf = 0;
+			if(sys[ndx]) for(jump = false; !jump; i--){
+				if(src[i] == "]") asdf--;
+				else if(src[i] == "["){
+					asdf++;
+					if(asdf == 0) jump = true;
+				}
 			}
 			continue;
 		}
-		else if(input[i] == "."){
+		else if(src[i] == "."){
 			out(sys[ndx]?sys[ndx]:0);
 		}
-		else if(input[i] == ","){
+		else if(src[i] == ","){
 			sys[ndx] = get();
 		}
 	}
