@@ -5,13 +5,13 @@ function out(msg){
 function get(){
 	var raw = document.getElementById("in").value;
 	inp = raw.split("\n");
-	document.getElementById("in").value = raw.replace(inp[0]+"\n","")
-	return inp[0];
+	return inp;
 }
 
 function parse(src){
 	document.getElementById("out").value = null;
 	src = src?src:document.getElementById("src").value;
+	inp = get();
 	var sys = [0];
 	var ndx = 0;
 	/*//preprocessing. index parens
@@ -59,7 +59,7 @@ function parse(src){
 			out(sys[ndx]?sys[ndx]:0);
 		}
 		else if(src[i] == ","){
-			sys[ndx] = get();
+			sys[ndx] = inp.shift();
 		}
 	}
 	return sys;
