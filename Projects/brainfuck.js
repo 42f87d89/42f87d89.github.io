@@ -1,5 +1,8 @@
 function out(msg){
-	document.getElementById("out").value += msg + "\n";
+	if(document.getElementById("ascii").checked){
+		document.getElementById("out").value += String.fromCharCode(msg);
+	}
+	else document.getElementById("out").value += msg + "\n";
 }
 
 function get(){
