@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+	<head>
+		<style>
+			#top{
+				height: 100%;
+				resize: none
+			}
+		</style>
+		<script type="text/javascript">
+			var httpReq = new XMLHttpRequest();
+			
+			httpReq.onreadystatechange = handle;
+
+			function handle(){
+				if(httpReq.readyState == 4){
+					if(httpReq.status === 200){
+						if(httpReq.responseText != "") document.getElementById("top").value = httpReq.responseText;
+					}
+					window.setTimeout(function (){req();}, 1000);
+				}
+				else return;
+			}
+
+			function req(){
+				httpReq.open('GET','http://noscosplace.net/Projects/top/top.txt',true);
+				httpReq.send(null);
+			}req();
+		</script>
+	</head>
+	<body>
+		<textarea id="top" rows="70" cols="80"><textarea>
+	</body>
+</html>
