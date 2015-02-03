@@ -1,0 +1,46 @@
+html, body{
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	background: #ccc;
+	font-family: courier;
+}
+input, textarea{
+    box-sizing: border-box;
+    width: 100%;
+}
+.main{
+        border-radius: 3px;
+        box-shadow: 2px 2px 2px #888;
+	width: 70%;
+	margin-top: 2%;
+	margin-bottom: 0px;
+	margin-right: 15%;
+	margin-left: 15%;
+	background: #fff;
+}
+.text{
+	background: #fff;
+	margin: 5%;
+}
+.navbar{
+	width: 100%;
+	height: 50px;
+	margin: 10px auto;
+}
+.NVitem{
+	display: inline-block;
+	width: 32%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #666;
+	text-decoration: none;
+	font-size: 20px;
+	color: #fff;
+}
+.NVitem:hover{
+	background-color: white;
+	color: black;
+}

@@ -148,7 +148,7 @@ var cvs; var ctx;
 document.addEventListener('DOMContentLoaded', function(){
 	cvs = document.createElement("canvas");
 	cvs.id = "CVS";
-	cvs.width = String(document.getElementById("inject").offsetWidth-210); //Make this dynamic
+	cvs.width = String(document.getElementById("inject").offsetWidth-3); //Make this dynamic
 	cvs.height = String(document.getElementById("inject").offsetHeight);
 	
 	document.getElementById("inject").appendChild(cvs);
