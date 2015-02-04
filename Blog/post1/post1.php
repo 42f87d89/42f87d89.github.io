@@ -1,18 +1,61 @@
-I don't quite feel this is done, but I'm starting to work on other things, so if I don't write this now, I will never do it.
+Number Systems
+non positional
+    greek/hebrew
+    roman
 
-A long long time ago, I was interested in alternative number bases. I started with binary, obviously, then I moved to dozenal, while still playing around with binary every once in a while. I also briefly looked at non-geometric bases, like fibonacci bases.
-Then I ventured into irrational territory, while wandering in wikipedia. Which led me to negabinary, then, finally, to complex bases.
-And that last one is the one that stuck (aside from the ocasional binary dabbling). So much so that it became my maths-investigation in highschool.
+positional
+    general
+    exponential
 
-(pictures)
+the exponential number system
+    natural base
+    non natural base
 
-My maths-invetigation was about 1+i as a binary base. I didn't get very far into it. I probably needed another 3 weeks to get anywhere.
-I did discover some important things though. I figured out that a base can have repeats, and it can also have numbers that don't appear at all.
+these number systems work as a positional number system where each position denotes a power of the base, starting on the right with b^0, then as we move left the exponent increases by one each time
 
-(pictures)
+in each position symbols are put, each representing a number. usualy these range from zero to one less than the base
 
-After a big while, I decided to investigate it further. I found out (can't remember how) that -1+i was a more promising binary base. By that I mean it was a proper base; it can represent any complex number, with no overlap (other than the "0.999... = 1"esque overlap).
+    base 10 as example
 
-(pictures)
+(surjective vs injective)
 
+arithmetics becomes quite simple in exponential number systems since there is a clear connection between each value.
 
+to sum two numbers, one can do certain operation digit wise
+
+sum each digit from one number to the corresponding one of to the other. if the result is smaller in value than the biggest symbol, then that will be the symbols in that position. otherwise subtract one plus the value of the maximum symbol untill the result is representable. the number of times you subtract will carry into the place to the left to be added. ***
+
+    base 10
+    2 base 8
+
+multiplication is done by repeated addition. a shortcut can be made when you multiply by a power of the base. this simply shifts each digit to the left an amount of spaces corresponding to the exponen of the base. ***
+
+    base 10
+
+(more depth)
+As such multiplicatio ncan always be broken down into a sum of multiplications between a number and a number smaller than the base
+
+this only becomes interesting once we start considering complex bases. since there is no range from zero to an imaginary number, it is difficult to see is a base is byjective given a number of symbols
+
+in order to check if it is (sur/in)jective over all complex numbers, you must satisfy there
+    add one to a number
+    get the negative of a number
+    multiple by i
+    sum two numbers
+
+(to check for (in/sur)jectivity us a lot more complicated but it can be done using modulo and splitting the numbe into real and imaginary)
+
+adding one to a number might seem simple, but it takes a little bit of thinking. that is, when it overflows
+
+you must find how to represent the value of one plus the maximum digitn your base. then you carry each digit to it's appropriate location
+
+    2 base (-1+i)
+
+however, in complex bases you can represent negative numbers without needing a negative sign *** (move this before "in order to check")
+as such additions may sometimes result in numbersboth smaller in smaller and shorter than any of the numbers being summed
+
+this means that you need an extra step to the add one algorithm (aside from carry), otherwise you will get stuck infinitely carrying (since carry always goes to the left, and the number needs to be smaller than the originals)
+
+namely this procedure is eliminating one and negative one
+
+    2 base (-1+i)
