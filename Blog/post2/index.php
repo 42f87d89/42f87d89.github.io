@@ -4,7 +4,7 @@
 .img{
      margin-left: auto;
      margin-right: auto;
-     width: 100%;
+     width: 60%;
  }
 .title{
      font-size: 150%;  
