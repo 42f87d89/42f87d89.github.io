@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title><The>Same but Different</The></title><link href="/default.css" rel="stylesheet" type="text/css" /><style>img{
+<!DOCTYPE html><html><head><title>The Same but Different</title><link href="/default.css" rel="stylesheet" type="text/css" /><style>img{
     width: 300px;
 }
 .img{
