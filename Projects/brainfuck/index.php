@@ -10,6 +10,7 @@
 	</head>
 	<body>
 		<?php include '../../navbar.php';?>
+		<?php include '../../analyticstracking.php';?>
                 <div class="main">
 		<table>
 			<tr>

@@ -2,6 +2,7 @@
 <head><link rel="stylesheet" type="text/css" href="/default.css"></head>
     <body>
         <?php include '../navbar.php';?>
+        <?php include '../analyticstracking.php';?>
         <div class="main">
             <div ><a href="./post1/">Number Systems</a></div>
             <div ><a href="./post2/">The Same but Different</a></div>

@@ -8,6 +8,7 @@
 	</head>
 	<body>
 		<?php include '../navbar.php';?>
+		<?php include '../analyticstracking.php';?>
                 <div class="main">
 			<p class="text">
 				My Projects:<br>

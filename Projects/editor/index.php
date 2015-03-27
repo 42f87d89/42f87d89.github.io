@@ -9,6 +9,7 @@
 	</head>
 	<body>
             <?php include '../../navbar.php';?>
+            <?php include '../../analyticstracking.php';?>
 		<div>
 			<textarea id="textarea" cols="50" rows="50"></textarea>
 			<input type="button" onclick="runCode()" value="Run"></input>

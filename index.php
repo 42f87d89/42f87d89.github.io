@@ -5,6 +5,7 @@
 	</head>
 	<body>
 		<?php include 'navbar.php';?>
+		<?php include 'analyticstracking.php';?>
 		<!--<div class="navbar">
 			<a href="/" class="NVitem">Home</a>
 			<a href="/Projects/" class="NVitem">Projects</a>
