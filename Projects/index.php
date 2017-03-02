@@ -13,6 +13,9 @@
 			<p class="text">
 				My Projects:<br>
 				<p class="text">
+					<a href="./chords/">Chord Trainer</a>. A little thingy that helps you learn chords.
+				</p>
+				<p class="text">
 					<a href="./touch/">Touch Tracker</a>. It is what would eventually become a simon-says type game, but was abandoned some time ago. I may try to start is again.
 				</p>
 				<p class="text">
