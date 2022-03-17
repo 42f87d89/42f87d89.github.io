@@ -13,6 +13,9 @@
 			<p class="text">
 				My Projects:<br>
 				<p class="text">
+					<a href="./minesweeper/">Minesweeper</a>. The latest in my ongoing saga to make the perfect minesweeper.
+				</p>
+				<p class="text">
 					<a href="./chords/">Chord Trainer</a>. A little thingy that helps you learn chords.
 				</p>
 				<p class="text">
