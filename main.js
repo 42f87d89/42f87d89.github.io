@@ -54,7 +54,7 @@ function createUI(cvs, ui, main) {
 
     ui.p.type = "text";
     ui.p.name = "Probability";
-    ui.p.value = 0.25;
+    ui.p.value = 0.2;
     let labelProb = document.createElement("p");
     labelProb.textContent = ui.p.name;
     main.appendChild(labelProb);
@@ -62,7 +62,7 @@ function createUI(cvs, ui, main) {
 
     ui.size.type = "text";
     ui.size.name = "UI size";
-    ui.size.value = 30;
+    ui.size.value = 25;
     let labelSize = document.createElement("p");
     labelSize.textContent = ui.size.name;
     main.appendChild(labelSize);
@@ -230,19 +230,32 @@ function applyLogic(logic, spot) {
 
 function expand(field, col, row) {
     let s = field.spots[row][col];
+    let n = 0;
     if(s.state == "hidden") {
         s.state = "open";
+        n = 1;
+    }
+    
+    if(s.state == "open") {
+        let mines = around(field, col, row, (f, c, r) => {return f.spots[r][c].mine?1:0});
+        let flags = around(field, col, row, (f, c, r) => {return f.spots[r][c].state == "flagged"?1:0});
+        if(mines == flags) {
+            n += around(field, col, row, (fi, co, ro) => {
+                let sp = fi.spots[ro][co];
+                if(sp.state == "hidden") {
+                    sp.state = "open";
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+        }
     }
 
-    let mines = around(field, col, row, (f, c, r) => {return f.spots[r][c].mine?1:0});
-    let flags = around(field, col, row, (f, c, r) => {return f.spots[r][c].state == "flagged"?1:0});
-
-    if(mines == flags) {
-        around(field, col, row, (f, c, r) => {
-            if(f.spots[r][c].state == "hidden") {
-                expand(f, c, r);
-            }
-        })
+    if(n > 0) {
+        around(field, col, row, (fi, co, ro) => {
+            expand(fi, co, ro);
+        });
     }
 }
 
@@ -292,7 +305,6 @@ function cascade(ctx, ui, pitch) {
         }
     }
     toOpen.forEach(e => ui.open[e.y][e.x] = true);
-    console.log(pitch)
     if(toOpen.length > 0) pop(ui, 100*Math.pow(1.5,pitch));
 
     let dontMatch = false;
@@ -326,7 +338,7 @@ function randomiseField(field, density, col, row) {
             field.spots[r][c].mine = Math.random() < density;
         }
     }
-    expand(field, col, row);
+    //expand(field, col, row);
     return field;
 }
 
