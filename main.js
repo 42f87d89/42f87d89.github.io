@@ -292,7 +292,8 @@ function cascade(ctx, ui, pitch) {
         }
     }
     toOpen.forEach(e => ui.open[e.y][e.x] = true);
-    if(toOpen.length > 0) pop(ui, 100*Math.pow(2,pitch));
+    console.log(pitch)
+    if(toOpen.length > 0) pop(ui, 100*Math.pow(1.5,pitch));
 
     let dontMatch = false;
     for(let c = 0; c<ui.grid.field.width; c++) {
@@ -307,7 +308,7 @@ function cascade(ctx, ui, pitch) {
 
     drawField(ctx, ui);
     if(dontMatch) {
-        setTimeout(() => cascade(ctx, ui, pitch+1), 50);
+        setTimeout(() => cascade(ctx, ui, Math.min(pitch+1,7)), 50);
     }
 }
 
