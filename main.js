@@ -1,5 +1,17 @@
 "use strict"
 
+/** @typedef UI
+ *  @property {HTMLInputElement} w
+ *  @property {HTMLInputElement} h
+ *  @property {HTMLInputElement} p
+ *  @property {HTMLInputElement} size
+ *  @property {HTMLInputElement} s
+ *  @property {boolean[][]} open
+ *  @property {AudioContext} audioCtx
+ *  @property {AudioBuffer} pop
+ *  @property {boolean} mute
+ *  @property {} grid
+ * */
 let UI = undefined;
 
 function init() {
@@ -18,7 +30,6 @@ function init() {
         open: undefined,
         audioCtx: undefined,
         pop: undefined,
-        audioBuffer: undefined,
         mute: false,
         grid: undefined
     };
@@ -32,6 +43,11 @@ function init() {
     createUI(cvs, UI, main);
 }
 
+/**
+ *  @param {HTMLCanvasElement} cvs 
+ *  @param {UI} ui 
+ *  @param {HTMLDivElement} main 
+ * */
 function createUI(cvs, ui, main) {
     let ctx = cvs.getContext("2d");
     ctx.imageSmoothingEnabled = false;
@@ -97,6 +113,26 @@ function createUI(cvs, ui, main) {
     main.appendChild(ui.s);
 }
 
+/** @typedef Grid
+ *  @property {number} width 
+ *  @property {number} height 
+ *  @property {number} size 
+ *  @property {number} thickness 
+ *  @property {number} outerPadding 
+ *  @property {number} innerPadding 
+ *  @property {Field} field
+ *  @property {number} part
+ * */
+
+/** @returns {Grid}
+ *  @param {number} width 
+ *  @param {number} height 
+ *  @param {number} size 
+ *  @param {number} thickness 
+ *  @param {number} outerPadding 
+ *  @param {number} innerPadding 
+ *  @param {number} prob 
+ * */
 function makeGrid(width, height, size, thickness, outerPadding, innerPadding, prob) {
     let result = {
         width: width,
@@ -116,6 +152,9 @@ function makeGrid(width, height, size, thickness, outerPadding, innerPadding, pr
     return result;
 }
 
+/** @returns {{width: number, height: number}}
+ *  @param {Grid} grid 
+ * */
 function calcSize(grid) {
     return {
         width: grid.width * grid.size + grid.thickness,
@@ -123,6 +162,13 @@ function calcSize(grid) {
     }
 }
 
+/** @returns {{x: number, y: number}}
+ *  @param {Grid} grid 
+ *  @param {number} col 
+ *  @param {number} row 
+ *  @param {number} partX 
+ *  @param {number} partY 
+ * */
 function calcPixelPos(grid, col, row, partX, partY) {
     let colX = grid.size * col + grid.thickness + grid.outerPadding;
     let colY = grid.size * row + grid.thickness + grid.outerPadding;
@@ -133,6 +179,10 @@ function calcPixelPos(grid, col, row, partX, partY) {
     }
 }
 
+/**
+ *  @param {CanvasRenderingContext2D} ctx
+ *  @param {Grid} grid 
+ * */
 function drawGrid(ctx, grid) {
     let dim = calcSize(grid);
     for (let i = 0; i <= grid.width; i++) {
@@ -144,7 +194,14 @@ function drawGrid(ctx, grid) {
 }
 
 let colors = ["#00f", "#900", "#e22", "#a09", "#0ac", "#0c0", "#e8c", "#333"];
-//w and h refer to position on the grid
+
+/**
+ *  @param {CanvasRenderingContext2D} ctx 
+ *  @param {Grid} grid 
+ *  @param {number} col 
+ *  @param {number} row 
+ *  @param {number} n 
+ * */
 function drawNumber(ctx, grid, col, row, n) {
     let templates = ["    x    ", "x       x", "x   x   x", "x x   x x", "x x x x x", "x xx xx x", "x xxxxx x", "xxxx xxxx"]
     let parts = templates[n - 1];
@@ -157,15 +214,46 @@ function drawNumber(ctx, grid, col, row, n) {
     }
 }
 
+/** @typedef {"open"|"hidden"|"flagged"} State
+ * */
+
+/** @typedef Spot 
+ *  @property {boolean} mine
+ *  @property {State} state
+ * */
+
+/** @returns {Spot}
+ *  @param {boolean} mine
+ *  @param {State} state
+ * */
 function makeSpot(mine, state) {
     return { mine: mine, state: state };
 }
 
+/** @typedef Field
+ *  @property {number} width
+ *  @property {number} height
+ *  @property {number} probability
+ *  @property {Spot[]} spots
+ *  @property {boolean} empty
+ * */
+
+/** @returns {Field}
+ *  @param {number} width
+ *  @param {number} height
+ *  @param {number} prob
+ * */
 function makeEmptyField(width, height, prob) {
     let spots = Array.from({ length: height }, () => Array.from({ length: width }, () => makeSpot(false, "hidden")));
     return { width: width, height: height, spots: spots, empty: true, probability: prob };
 }
 
+/** @returns {number}
+ *  @param {Field} field 
+ *  @param {number} col
+ *  @param {number} row
+ *  @param {(f: Field, c: number, r: number) => number} f 
+ * */
 function around(field, col, row, f) {
     let result = 0;
     for (let i of [-1, 0, 1]) {
@@ -179,6 +267,13 @@ function around(field, col, row, f) {
     return result;
 }
 
+/**
+ *  @param {CanvasRenderingContext2D} ctx 
+ *  @param {Grid} grid 
+ *  @param {number} col 
+ *  @param {number} row 
+ *  @param {string} color 
+ * */
 function drawSquare(ctx, grid, col, row, color) {
     ctx.fillStyle = color
     let pos = calcPixelPos(grid, col, row, 0, 0);
@@ -186,6 +281,10 @@ function drawSquare(ctx, grid, col, row, color) {
     ctx.fillRect(pos.x, pos.y, size, size);
 }
 
+/**
+ *  @param {CanvasRenderingContext2D} ctx 
+ *  @param {UI} ui 
+ * */
 function drawField(ctx, ui) {
     let grid = ui.grid;
     for (let col = 0; col < grid.width; col++) {
@@ -212,14 +311,27 @@ function drawField(ctx, ui) {
     }
 }
 
+/** @typedef {"expand"|"none"} Action
+ * */
+
+/** @typedef {{prev: State, next: State, action: Action}} Logic
+ * */
+/** @type {Logic}
+ * */
 let rLogic = [
     { prev: "hidden", next: "open", action: "expand" },
     { prev: "open", next: "open", action: "expand" }];
+/** @type {Logic}
+ * */
 let lLogic = [
     { prev: "hidden", next: "flagged", action: "none" },
     { prev: "flagged", next: "hidden", action: "none" },
     { prev: "open", next: "open", action: "expand" }];
 
+/**
+ *  @param {Logic} logic 
+ *  @param {Spot} spot 
+ * */
 function applyLogic(logic, spot) {
     let action = "none";
     for (let i = 0; i < logic.length; i++) {
@@ -233,6 +345,11 @@ function applyLogic(logic, spot) {
     return action;
 }
 
+/**
+ * @param {Field} field 
+ * @param {number} col 
+ * @param {number} row 
+ * */
 function expand(field, col, row) {
     let s = field.spots[row][col];
     let n = 0;
@@ -264,6 +381,12 @@ function expand(field, col, row) {
     }
 }
 
+/**
+ *  @param {MouseEvent} e 
+ *  @param {HTMLCanvasElement} cvs 
+ *  @param {boolean} dblClick 
+ *  @param {UI} ui 
+ * */
 function onClick(e, cvs, dblClick, ui) {
     let grid = ui.grid;
     let r = cvs.getBoundingClientRect();
@@ -297,6 +420,11 @@ function onClick(e, cvs, dblClick, ui) {
     cascade(cvs.getContext("2d"), ui, 0.0);
 }
 
+/**
+ *  @param {UI} ui 
+ *  @param {CanvasRenderingContext2D} ctx 
+ *  @param {number} pitch 
+ * */
 function cascade(ctx, ui, pitch) {
     let toOpen = [];
     for (let col = 0; col < ui.grid.field.width; col++) {
@@ -329,10 +457,22 @@ function cascade(ctx, ui, pitch) {
     }
 }
 
+/**
+ *  @param {MouseEvent} e 
+ *  @param {HTMLCanvasElement} cvs 
+ *  @param {boolean} dblClick 
+ *  @param {UI} ui 
+ * */
 function onDoubleClick(e, cvs, dblClick, ui) {
     onClick(e, cvs, dblClick, ui);
 }
 
+/**
+ *  @param {Field} field
+ *  @param {number} col 
+ *  @param {number} row 
+ *  @param {number} density 
+ * */
 function randomiseField(field, density, col, row) {
     field.empty = false;
     for (let c = 0; c < field.width; c++) {
@@ -346,6 +486,9 @@ function randomiseField(field, density, col, row) {
     return field;
 }
 
+/** @returns {{x: number, y: number}}
+ *  @param {Field} field 
+ * */
 function getBorder(field) {
     let border = [];
     for (let col = 0; col < field.width; col++) {
@@ -360,6 +503,11 @@ function getBorder(field) {
     return border;
 }
 
+
+/** @returns {{x: number, y: number}}
+ *  @param {Field} field 
+ *  @param {{x: number, y: number}} border 
+ * */
 function innerBorder(field, border) {
     let inner = [];
     for (let s of border) {
@@ -372,6 +520,10 @@ function innerBorder(field, border) {
     return inner;
 }
 
+/** @returns {{x: number, y: number}}
+ *  @param {Field} field 
+ *  @param {{x: number, y: number}} border 
+ * */
 function solveOnce(field, border) {
     let inner = innerBorder(field, border);
     for (let i of inner) {
@@ -385,6 +537,12 @@ function solveOnce(field, border) {
     }
 }
 
+/**
+ *  @param {Field} field 
+ *  @param {number} col 
+ *  @param {number} row 
+ *  @param {number} p 
+ * */
 function makeSolvableField(field, p, col, row) {
     field.spots[row][col].state = "open";
     around(field, col, row, (f, c, r) => {
@@ -398,6 +556,10 @@ function makeSolvableField(field, p, col, row) {
     console.log(innerBorder(field, border));
 }
 
+/** @returns {Promise<AudioBuffer>}
+ *  @param {string} filepath 
+ *  @param {AudioContext} audioContext 
+ * */
 async function getAudioFile(audioContext, filepath) {
     const response = await fetch(filepath);
     const arrayBuffer = await response.arrayBuffer();
@@ -405,6 +567,10 @@ async function getAudioFile(audioContext, filepath) {
     return audioBuffer;
 }
 
+/**
+ *  @param {UI} ui 
+ *  @param {number} pitch 
+ * */
 function pop(ui, pitch) {
     if (ui.mute) return;
 
