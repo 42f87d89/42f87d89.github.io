@@ -234,7 +234,7 @@ function makeSpot(mine, state) {
  *  @property {number} width
  *  @property {number} height
  *  @property {number} probability
- *  @property {Spot[]} spots
+ *  @property {Spot[][]} spots
  *  @property {boolean} empty
  * */
 
@@ -316,6 +316,7 @@ function drawField(ctx, ui) {
 
 /** @typedef {{prev: State, next: State, action: Action}} Logic
  * */
+
 /** @type {Logic}
  * */
 let rLogic = [
@@ -486,7 +487,22 @@ function randomiseField(field, density, col, row) {
     return field;
 }
 
-/** @returns {{x: number, y: number}}
+/** @typedef {{x: number, y: number, generated: boolean}[]} Border
+ * */
+
+/** @returns {number}
+ *  @param {Border} border 
+ * */
+function addToBorder(border, x, y) {
+    if (border.find((v) => { return v.x == x && v.y == y; }) === undefined) {
+        border.push({ x: x, y: y, generated: false });
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/** @returns {Border}
  *  @param {Field} field 
  * */
 function getBorder(field) {
@@ -497,44 +513,92 @@ function getBorder(field) {
                 if (f.spots[r][c].state == "open") return 1;
                 else return 0;
             });
-            if (n > 0 && field.spots[row][col].state == "hidden") border.push({ x: col, y: row });
+            if (n > 0 && field.spots[row][col].state == "hidden") addToBorder(border, col, row);
         }
     }
     return border;
 }
 
-
-/** @returns {{x: number, y: number}}
+/**
  *  @param {Field} field 
- *  @param {{x: number, y: number}} border 
+ *  @param {Border} border 
+ * */
+function updateBorder(field, border) {
+    let changes = 0;
+    for (let s of border) {
+        if (field.spots[s.y][s.x].state == "open") {
+            changes += around(field, s.x, s.y, (f, c, r) => {
+                if (f.spots[r][c].state == "hidden") return addToBorder(border, c, r);
+                else return 0;
+            });
+        }
+    }
+    return changes;
+}
+
+/** @returns {Border}
+ *  @param {Field} field 
+ *  @param {Border} border 
  * */
 function innerBorder(field, border) {
     let inner = [];
     for (let s of border) {
         around(field, s.x, s.y, (f, c, r) => {
-            if (f.spots[r][c].state == "open" &&
-                inner.find((v) => { return v.x == c && v.y == r; }) === undefined)
-                inner.push({ x: c, y: r });
+            if (f.spots[r][c].state == "open")
+                addToBorder(inner, c, r);
         });
     }
     return inner;
 }
 
-/** @returns {{x: number, y: number}}
+/** @returns {Border}
  *  @param {Field} field 
- *  @param {{x: number, y: number}} border 
+ *  @param {Border} border 
  * */
 function solveOnce(field, border) {
-    let inner = innerBorder(field, border);
-    for (let i of inner) {
-        let mines = around(field, i.x, i.y, (f, c, r) => { return f.spots[r][c].mine ? 1 : 0 });
-        let hidden = around(field, i.x, i.y, (f, c, r) => { return f.spots[r][c].state == "hidden" ? 1 : 0 });
-        let flags = around(field, i.x, i.y, (f, c, r) => { return f.spots[r][c].state == "flagged" ? 1 : 0 });
+    function clearSpots(fi, inn) {
+        let opened = 0;
+        for (let i of inn) {
+            let mines = around(fi, i.x, i.y, (f, c, r) => { return f.spots[r][c].mine ? 1 : 0 });
+            let flags = around(fi, i.x, i.y, (f, c, r) => { return f.spots[r][c].state == "flagged" ? 1 : 0 });
 
-        if (mines - flags == hidden) {
-            around(field, i.x, i.y, (f, c, r) => { if (f.spots[r][c].state == "hidden") f.spots[r][c].state == "flagged" });
+            if (mines == flags) {
+                opened += around(fi, i.x, i.y, (f, c, r) => {
+                    if (f.spots[r][c].state == "hidden") {
+                        f.spots[r][c].state = "open";
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+            }
+        }
+        return opened;
+    }
+    function flagSpots(fi, inn) {
+        for (let i of inn) {
+            let mines = around(fi, i.x, i.y, (f, c, r) => { return f.spots[r][c].mine ? 1 : 0 });
+            let flags = around(fi, i.x, i.y, (f, c, r) => { return f.spots[r][c].state == "flagged" ? 1 : 0 });
+            let hidden = around(fi, i.x, i.y, (f, c, r) => { return f.spots[r][c].state == "hidden" ? 1 : 0 });
+
+            if (mines - flags == hidden) {
+                around(fi, i.x, i.y, (f, c, r) => {
+                    if (f.spots[r][c].state == "hidden") {
+                        f.spots[r][c].state = "flagged";
+                    }
+                });
+            }
         }
     }
+    let inner = innerBorder(field, border);
+    let opened = 1;
+    while (opened > 0) {
+        opened = clearSpots(field, inner);
+        flagSpots(field, inner);
+    }
+
+    let changes = updateBorder(field, border);
+    return changes;
 }
 
 /**
@@ -549,11 +613,16 @@ function makeSolvableField(field, p, col, row) {
         f.spots[r][c].state = "open";
     });
     let border = getBorder(field);
-    for (let s of border) {
-        field.spots[s.y][s.x].mine = Math.random() < p;
+    let changes = 1;
+    while (changes > 0) {
+        for (let s of border) {
+            if (!s.generated) {
+                field.spots[s.y][s.x].mine = Math.random() < p;
+                s.generated = true;
+            }
+        }
+        changes = solveOnce(field, border);
     }
-    solveOnce(field, border);
-    console.log(innerBorder(field, border));
 }
 
 /** @returns {Promise<AudioBuffer>}
